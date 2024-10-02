@@ -1,1 +1,2 @@
-# arkpz-pzpi-22-7-tryhub-ihnat
+# ПЗПІ-22-7
+Тригуб Ігнат

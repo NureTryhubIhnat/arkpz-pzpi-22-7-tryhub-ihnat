@@ -58,7 +58,7 @@ Cтудент повинен обрати три методи рефактори
 Тригуб Ігнат Олексійович
 ПЗПІ-22-7
 
-preencoded.png
+
 
 Вступ
 Рефакторинг — це процес покращення внутрішньої
@@ -70,7 +70,7 @@ preencoded.png
 • Inline Method (Інлайновий метод)
 • Replace Array with Object (Замінення масиву об’єктом)
 
-preencoded.png
+
 
 Extract Method:
 Проблема: Занадто довгі методи з повторюваними блоками коду.
@@ -78,7 +78,7 @@ preencoded.png
 Вплив: Ускладнює читання та підтримку, важко повторно використовувати частини коду.
 Рішення: Виділення повторюваних або логічно завершених блоків у окремі методи.
 
-preencoded.png
+
 
 Extract Method:
 Переваги:
@@ -88,7 +88,7 @@ preencoded.png
 використовувати в інших частинах програми.
 • Модульність: Легше вносити зміни в окремі частини коду.
 
-preencoded.png
+
 
 Inline Method:
 Проблема
@@ -98,7 +98,7 @@ preencoded.png
 • В деяких випадках функції, які виконують елементарну операцію, краще вбудувати в
 основний код, щоб покращити читабельність.
 
-preencoded.png
+
 
 Inline Method:
 Переваги після рефакторинга
@@ -108,11 +108,11 @@ preencoded.png
 впливають на кінцеву ціну.
 • Ефективність: Зменшено кількість викликів функцій.
 
-preencoded.png
+
 
 Replace Constructor with Facto
 
-preencoded.png
+
 
 Replace Constructor with Facto
 Проблеми:
@@ -130,7 +130,7 @@ preencoded.png
 нові статуси або додаткові перевірки, код стане ще
 складнішим і важчим для розуміння.
 
-preencoded.png
+
 
 Replace Constructor with Facto
 Переваги після рефакторингу:
@@ -146,7 +146,7 @@ preencoded.png
 створення замовлення без змін в основному
 конструкторі.
 
-preencoded.png
+
 
 Висновки:
 У результаті виконаної роботи та застосування
@@ -170,7 +170,7 @@ Replace Constructor with Factory Method
 та складність конструкторів.
 зрозумілим і контрольованим.
 
-preencoded.png
+
 
 Висновки:
 4. Загальне покращення якості коду:
@@ -190,7 +190,7 @@ preencoded.png
 важливим етапом у розробці програмного
 забезпечення, який сприяє покращенню якості
 коду та його подальшій підтримці.
-preencoded.png
+
 
 Список використанних джерел
 1) Fowler, Martin. Refactoring: Improving the Design of Existing Code. Addison-Wesley Professional, 1999. – 464 p.
@@ -198,6 +198,6 @@ preencoded.png
 3) McConnell, Steve. Code Complete: A Practical Handbook of Software Construction. Microsoft Press, 2004. – 960 p.
 4) Sandi Metz. Practical Object-Oriented Design in Ruby: An Agile Primer. Addison-Wesley, 2013. – 320 p.
 
-preencoded.png
+
 
 

@@ -44,7 +44,7 @@ Cтудент повинен обрати три методи рефактори
 значне покращення структури та читабельності коду. Ці зміни також зробили код
 легшим для підтримки та розширення.
 
-Посилання на відео презентацію - https://youtu.be/MM_hqWCNb7E
+Посилання на відео презентацію - https://youtu.be/IhqEIo6RoSU
 Посилання на GitHub репозиторій с кодом https://github.com/NureTryhubIhnat/arkpz-pzpi-22-7-tryhubihnat/blob/main/Pract2/arkpz-pzpi-22-7-tryhub-ihnat-pract2/source%20code.py
 
 ДОДАТОК А

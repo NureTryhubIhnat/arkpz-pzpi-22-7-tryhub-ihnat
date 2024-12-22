@@ -1,0 +1,565 @@
+МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+Кафедра «Програмної інженерії»
+
+ЗВІТ
+З Лабораторної роботи № 2
+з дисципліни
+«Аналіз та рефакторинг коду»
+
+Виконав
+
+Перевірив
+
+ст. гр. ПЗПІ-22-7
+
+ст. викладач каф. ПІ
+
+Тригуб Ігнат
+
+Сокорчук І. П.
+
+Харків 2024
+
+1 Вступ
+1.1 Тема
+Розробка бази даних для серверної частини програмної системи та
+прикладного програмного інтерфейсу (АРІ).
+1.2 Мета
+Розробити базу даних для серверної частини програмної системи та
+прикладного програмного інтерфейсу.
+2 Розробка діаграм
+2.1 Розробка UML діаграми прецедентів для серверної частини системи
+Для акторів UML діаграми було Для акторів UML діаграми було обрано
+користувача (User) та адміністратора (Admin). Для прецедентів були обрано
+реєстрація користувача, авторизація користувача, перегляд історії здоров'я,
+отримання рекомендацій, отримання сповіщень, перегляд графіків і звітів, CRUD
+операції для керування даними про здоров'я та користувачів (для адміністратора).
+Тепер розробимо UML діаграму за нашими акторами та прецедентами
+(див. рис. 2.1).
+
+Рис. 2.1 – UML діаграма прецедентів
+
+2.2 Розробка ER діаграми даних
+Для розробки бази даних створено такі таблиці: User (Користувач), HealthData
+(Дані про здоров'я), Recommendation (Рекомендація), Notification (Сповіщення),
+Admin (Адміністратор), HealthAlgorithm (Алгоритм прогнозування) (див. рис. 2.2).
+
+Рис. 2.2 – ER діаграма даних
+3. Розробка бази даних
+3.1 Розроблення бази даних програмної системи
+Код наведено у додатку А
+Розробка бази даних для програмної системи здійснюється з урахуванням
+вимог щодо зберігання та обробки даних про користувачів, їх здоров'я, рекомендації
+та інші важливі аспекти системи. Для цієї мети вибрано рішення на основі
+MongoDB, яке є документно-орієнтованою базою даних, що забезпечує високу
+гнучкість та масштабованість, особливо в контексті роботи з даними IoT-пристроїв
+
+та складними взаємозв'язками між різними сутностями.
+Структура бази даних складається з наступних основних колекцій (таблиць):
+3.1.1
+
+Колекція users: Колекція містить дані про користувачів
+
+системи. Кожен документ цієї колекції представляє інформацію про
+користувача, таку як ім’я, прізвище, електронна пошта, пароль, телефон,
+стать, дата народження та переваги мови інтерфейсу.
+3.1.2
+користувачів,
+
+Колекція health_data: Ця колекція зберігає дані про здоров’я
+зібрані
+
+через
+
+IoT-пристрої.
+
+Кожен
+
+документ
+
+містить
+
+інформацію про пульс, рівень активності, кількість годин сну та рівень стресу,
+а також дату та час запису цих даних.
+3.1.3
+
+Колекція recommendations: Колекція містить персоналізовані
+
+рекомендації для користувачів на основі їхнього здоров'я та активності.
+Рекомендації можуть включати поради щодо поліпшення здоров'я, що
+генеруються системою або адміністратором.
+3.1.4
+
+Колекція notifications: Колекція зберігає дані про сповіщення,
+
+які надсилаються користувачам. Сповіщення можуть бути пов’язані з
+нагадуваннями, попередженнями чи рекомендаціями.
+3.1.5
+
+Колекція health_algorithms: Ця колекція містить інформацію
+
+про алгоритми обробки здоров'я, які використовуються для аналізу даних
+користувачів, наприклад, для визначення оптимальних рекомендацій або для
+попередження про ризики здоров'я.
+3.1.6
+
+Колекція admins: Колекція зберігає дані про адміністраторів
+
+системи, які мають доступ до керування користувачами та алгоритмами.
+Кожен документ містить інформацію про ім’я, прізвище, електронну пошту,
+роль (адміністратор чи супер-адміністратор) та дату створення облікового
+запису.
+Зв’язки між колекціями
+Всі колекції містять посилання на інші колекції через поле типу
+ObjectId. Це дозволяє зберігати і підтримувати зв'язки між документами:
+users — основна колекція, яка зберігає інформацію про користувачів.
+
+health_data, recommendations, notifications — колекції, що зберігають
+дані, пов’язані з конкретними користувачами через поле user_id.
+health_algorithms — алгоритми, що можуть бути прив’язані до
+адміністраторів через поле admin_id.
+Використання Mongoose для роботи з MongoDB
+Для роботи з базою даних використовується Mongoose, що дозволяє
+спростити створення моделей, валідацію даних та взаємодію з MongoDB.
+Mongoose надає гнучкість у визначенні схеми даних, дозволяючи також
+застосовувати різноманітні методи для маніпуляцій з документами та
+колекціями, а також підтримує функціональність для
+
+зв'язків між
+
+документами через ref.
+Таке проектування бази даних дозволяє ефективно зберігати та
+обробляти дані, а також гнучко масштабувати систему в майбутньому.
+4.2 Розробка АРІ для взаємодії серверної частини з клієнтами
+Для реалізації серверної частини програми було розроблено наступні
+маршрути та контролери, що забезпечують функціонал реєстрації, авторизації,
+активації акаунтів, а також управління сесіями користувачів.
+4.2.1 Маршрути:
+•
+
+POST /registration – маршрут для реєстрації нового користувача.
+
+•
+
+POST /login – маршрут для авторизації користувача.
+
+•
+
+POST /logout – маршрут для виходу користувача.
+
+•
+
+GET /activate/:link – маршрут для активації акаунта через посилання
+
+активації.
+•
+
+GET /refresh – маршрут для оновлення сесії за допомогою refresh
+
+токену.
+•
+
+GET /users – маршрут для отримання списку всіх користувачів
+
+(доступний лише авторизованим користувачам).
+4.2.2 Контролери:
+
+UserController:
+•
+
+registration: Реєстрація користувача з валідацією даних. При
+
+успішній реєстрації генерується refresh токен, який зберігається в cookie.
+•
+
+login: Авторизація користувача з перевіркою на відповідність
+
+введених даних до збережених у базі даних. При успішному вході також
+генерується refresh токен.
+•
+
+logout: Вихід користувача із системи через видалення refresh токену
+
+з cookies.
+•
+
+activate: Активація користувача за допомогою активаційного
+
+посилання, яке відправляється на email після реєстрації.
+•
+
+refresh:
+
+Оновлення
+
+токенів
+
+для
+
+користувача,
+
+що
+
+дозволяє
+
+підтримувати сесію без повторної авторизації.
+•
+
+getUsers: Отримання списку всіх користувачів системи для
+
+адміністратора.
+Код реалізації:
+
+4.2.3
+
+Наведено у додатку Б
+Цей набір маршрутів і контролерів забезпечує базову функціональність
+для реєстрації та авторизації користувачів, а також їх активацію і управління
+сесією.
+
+4
+
+Висновок
+
+Під час виконання лабораторної роботи було створено UML діаграму
+прецедентів для серверної частини, ER діаграму даних. Після чого на основі цих
+діаграму було створено базу даних для програмної системи. На основі цієї бази
+даних було створено діаграму структури бази даних. Потім було розроблено
+функції для роботи з цією базою даних та АРІ для взаємодії серверної частини з
+клієнтами. Після чого було створено програмну реалізацію розробленого АРІ.
+
+Посилання на відео: https://www.youtube.com/watch?v=suwHt6cHCgM
+Додаток А
+1 const express = require('express');
+2 const mongoose = require('mongoose');
+3 const bodyParser = require('body-parser');
+4
+5 // Подключение к MongoDB
+6 mongoose.connect('mongodb://localhost:27017/health_system', { useNewUrlParser: true,
+useUnifiedTopology: true });
+7
+8 // Создание схем и моделей
+9
+10 // Схема пользователя
+11 const userSchema = new mongoose.Schema({
+12
+first_name: { type: String, required: true },
+13
+last_name: { type: String, required: true },
+14
+email: { type: String, required: true, unique: true },
+15
+password_hash: { type: String, required: true },
+16
+phone: String,
+17
+date_of_birth: Date,
+18
+gender: { type: String, enum: ['Male', 'Female', 'Other'] },
+19
+language_preference: { type: String, enum: ['Ukrainian', 'English'], required: true
+},
+20
+created_at: { type: Date, default: Date.now },
+21
+updated_at: { type: Date, default: Date.now }
+22 });
+23
+24 const User = mongoose.model('User', userSchema);
+25
+26 // Схема данных о здоровье
+27 const healthDataSchema = new mongoose.Schema({
+28
+user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+29
+pulse: Number,
+30
+activity_level: Number,
+31
+sleep_hours: Number,
+32
+stress_level: Number,
+33
+recorded_at: { type: Date, default: Date.now },
+34
+created_at: { type: Date, default: Date.now },
+35
+updated_at: { type: Date, default: Date.now }
+36 });
+37
+38 const HealthData = mongoose.model('HealthData', healthDataSchema);
+39
+40 // Схема рекомендаций
+41 const recommendationSchema = new mongoose.Schema({
+42
+user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+43
+recommendation_text: String,
+44
+created_at: { type: Date, default: Date.now },
+45
+updated_at: { type: Date, default: Date.now }
+46 });
+47
+48 const Recommendation = mongoose.model('Recommendation', recommendationSchema);
+49
+50 // Схема уведомлений
+51 const notificationSchema = new mongoose.Schema({
+52
+user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+53
+message: String,
+
+54
+notification_type: { type: String, enum: ['Reminder', 'Alert', 'Recommendation'] },
+55
+sent_at: { type: Date, default: Date.now },
+56
+status: { type: String, enum: ['Sent', 'Pending', 'Failed'] },
+57
+created_at: { type: Date, default: Date.now },
+58
+updated_at: { type: Date, default: Date.now }
+59 });
+60
+61 const Notification = mongoose.model('Notification', notificationSchema);
+62
+63 // Схема администраторов
+64 const adminSchema = new mongoose.Schema({
+65
+first_name: { type: String, required: true },
+66
+last_name: { type: String, required: true },
+67
+email: { type: String, required: true, unique: true },
+68
+password_hash: { type: String, required: true },
+69
+role: { type: String, enum: ['Admin', 'SuperAdmin'], required: true },
+70
+created_at: { type: Date, default: Date.now },
+71
+updated_at: { type: Date, default: Date.now }
+72 });
+73
+74 const Admin = mongoose.model('Admin', adminSchema);
+75
+76 // Схема алгоритмов здоровья
+77 const healthAlgorithmSchema = new mongoose.Schema({
+78
+name: { type: String, required: true },
+79
+description: String,
+80
+threshold_pulse: Number,
+81
+threshold_activity: Number,
+82
+threshold_stress: Number,
+83
+created_at: { type: Date, default: Date.now },
+84
+updated_at: { type: Date, default: Date.now }
+85 });
+86
+87 const HealthAlgorithm = mongoose.model('HealthAlgorithm', healthAlgorithmSchema);
+88
+89 // Создание Express-приложения
+90 const app = express();
+91 app.use(bodyParser.json());
+92
+93 // Пример маршрута для добавления пользователя
+94 app.post('/users', async (req, res) => {
+95
+try {
+96
+const user = new User(req.body);
+97
+await user.save();
+98
+res.status(201).json(user);
+99
+} catch (error) {
+100
+res.status(400).json({ message: error.message });
+101
+}
+102 });
+103
+104 // Пример маршрута для получения всех пользователей
+105 app.get('/users', async (req, res) => {
+106
+try {
+107
+const users = await User.find();
+108
+res.status(200).json(users);
+109
+} catch (error) {
+110
+res.status(400).json({ message: error.message });
+111
+}
+112 });
+113
+114 // Запуск сервера
+115 const PORT = 3000;
+
+116 app.listen(PORT, () => {
+117
+console.log(`Server is running on port ${PORT}`);
+118 });
+
+Додаток Б
+
+1 router.post(
+2
+"/registration",
+3
+body("email").isEmail(),
+4
+body("password").isLength({ min: 3, max: 32 }),
+5
+userController.registration
+6 );
+7 router.post("/login", userController.login);
+8 router.post("/logout", userController.logout);
+9 router.get("/activate/:link", userController.activate);
+10 router.get("/refresh", userController.refresh);
+11 router.get("/users", authMiddleware, userController.getUsers);
+12 class UserController {
+13
+async registration(req, res, next) {
+14
+try {
+15
+const errors = validationResult(req);
+16
+if (!errors.isEmpty()) {
+17
+return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))
+18
+}
+19
+const {email, password} = req.body;
+20
+const userData = await userService.registration(email, password);
+21
+res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 *
+60 * 1000, httpOnly: true})
+22
+return res.json(userData);
+23
+} catch (e) {
+24
+next(e);
+25
+}
+26
+}
+27
+28
+async login(req, res, next) {
+29
+try {
+30
+const {email, password} = req.body;
+31
+const userData = await userService.login(email, password);
+32
+res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 *
+60 * 1000, httpOnly: true})
+33
+return res.json(userData);
+34
+} catch (e) {
+35
+next(e);
+36
+}
+37
+}
+38
+39
+async logout(req, res, next) {
+40
+try {
+41
+const {refreshToken} = req.cookies;
+42
+const token = await userService.logout(refreshToken);
+43
+res.clearCookie('refreshToken');
+44
+return res.json(token);
+45
+} catch (e) {
+46
+next(e);
+47
+}
+48
+}
+49
+50
+async activate(req, res, next) {
+51
+try {
+52
+const activationLink = req.params.link;
+53
+await userService.activate(activationLink);
+54
+return res.redirect(process.env.CLIENT_URL);
+55
+} catch (e) {
+
+56
+next(e);
+57
+}
+58
+}
+59
+60
+async refresh(req, res, next) {
+61
+try {
+62
+const {refreshToken} = req.cookies;
+63
+const userData = await userService.refresh(refreshToken);
+64
+res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 *
+60 * 1000, httpOnly: true})
+65
+return res.json(userData);
+66
+} catch (e) {
+67
+next(e);
+68
+}
+69
+}
+70
+71
+async getUsers(req, res, next) {
+72
+try {
+73
+const users = await userService.getAllUsers();
+74
+return res.json(users);
+75
+} catch (e) {
+76
+next(e);
+77
+}
+78
+}
+
+
